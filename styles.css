@@ -1158,7 +1158,28 @@ button { font: inherit; }
   .footer__grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
 }
 
-/* ============ SWEATPALS EMBED (waitlist tier) ============ */
+/* ============ RSVP FRAME (Sweatpals waitlist iframe button) ============ */
+/* The iframe renders the Sweatpals button; clicks open the waitlist popup
+   provided by the script tag loaded at the bottom of the body. */
+.rsvp-frame {
+  display: inline-block;
+  vertical-align: middle;
+  border: 0;
+  width: 100%;
+}
+.rsvp-frame--sm {
+  max-width: 160px;
+  height: 44px;
+}
+.rsvp-frame--lg {
+  max-width: 280px;
+  height: 56px;
+}
+@media (max-width: 480px) {
+  .rsvp-frame--lg { max-width: 100%; }
+}
+
+/* ============ SWEATPALS EMBED (legacy, unused) ============ */
 /* Sweatpals injects its own button at the script tag location. Wrapper sets
    minimum sizing so the layout reserves space and the injected button matches
    our scale. The Sweatpals modal handles the waitlist signup popup. */
