@@ -1,3 +1,47 @@
+// Pre-Register modal: open Sweatpals waitlist iframe on demand
+(function () {
+  const modal = document.getElementById('rsvpModal');
+  const frame = document.getElementById('rsvpFrame');
+  if (!modal || !frame) return;
+
+  const RSVP_URL =
+    'https://sweatpals.com/embed/juneteenth-the-blend-coffee-and-rb-day-party?priceTierId=55dbd013-b471-4a04-9b76-c5b5b0bddd3d';
+
+  function openRsvp() {
+    if (frame.getAttribute('src') !== RSVP_URL) {
+      frame.setAttribute('src', RSVP_URL);
+    }
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('is-rsvp-open');
+  }
+  function closeRsvp() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('is-rsvp-open');
+  }
+
+  document.querySelectorAll('[data-rsvp-open]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openRsvp();
+      if (window.amplitude) {
+        const section = btn.closest('section');
+        window.amplitude.track('cta_pre_register_clicked', {
+          location: section ? section.id || 'unknown' : 'nav',
+          text: btn.textContent.trim()
+        });
+      }
+    });
+  });
+  document.querySelectorAll('[data-rsvp-close]').forEach((el) => {
+    el.addEventListener('click', closeRsvp);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) closeRsvp();
+  });
+})();
+
 // Tappable programming cards: toggle .is-open, fire Amplitude event
 document.querySelectorAll('[data-card]').forEach((card) => {
   card.addEventListener('click', (e) => {

@@ -1197,7 +1197,67 @@ button { font: inherit; }
   border-radius: 999px !important;
 }
 
-/* ============ RSVP TRIGGER (Sweatpals waitlist overlay) ============ */
+/* ============ RSVP MODAL (Sweatpals waitlist iframe) ============ */
+.rsvp-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.rsvp-modal.is-open { display: flex; }
+.rsvp-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.78);
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.rsvp-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(96vw, 560px);
+  height: min(94vh, 780px);
+  background: var(--black);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,.5);
+}
+.rsvp-modal__frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: var(--black);
+}
+.rsvp-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  border: 0;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s ease, transform .15s ease;
+}
+.rsvp-modal__close:hover { background: rgba(0,0,0,.85); transform: scale(1.05); }
+body.is-rsvp-open { overflow: hidden; }
+
+/* ============ RSVP TRIGGER (legacy iframe overlay, unused) ============ */
 /* Visible styled button shows our design; the Sweatpals iframe is layered
    on top, made invisible, but still receives clicks so the popup opens.
    `overflow: hidden` + matching border-radius clips anything the iframe
