@@ -1279,7 +1279,17 @@ body.is-rsvp-open { overflow: hidden; }
   .sweatpals-widget--lg { width: 100%; max-width: 360px; }
 }
 
-/* ============ RSVP TRIGGER (Sweatpals widget overlay) ============ */
+/* ============ RSVP AUTO-EMBED (Sweatpals auto-injected button) ============ */
+/* With enableAutoEmbed=true Sweatpals injects its own styled button next to
+   the script tag. The wrapper just reserves layout space and sets sizing. */
+.rsvp-autoembed {
+  display: inline-block;
+  vertical-align: middle;
+}
+.rsvp-autoembed--sm { min-width: 130px; }
+.rsvp-autoembed--lg { min-width: 240px; }
+
+/* ============ RSVP TRIGGER (Sweatpals widget overlay, unused) ============ */
 /* Pattern: styled brand button (visible) + Sweatpals iframe (transparent,
    absolutely positioned on top) + Sweatpals script. The user sees our
    button. The iframe catches every click and the script renders the
