@@ -1279,38 +1279,40 @@ body.is-rsvp-open { overflow: hidden; }
   .sweatpals-widget--lg { width: 100%; max-width: 360px; }
 }
 
-/* ============ RSVP TRIGGER (Sweatpals waitlist iframe overlay) ============ */
-/* Visible styled button shows our brand design. The Sweatpals iframe (which
-   loads the actual checkout button) is layered on top with opacity 0 and
-   receives every click. Clicking it triggers the Sweatpals popup via the
-   script loaded in <head>. The visible button has pointer-events: none so
-   100% of clicks land on the iframe, never on the underlying anchor. */
+/* ============ RSVP TRIGGER (Sweatpals widget overlay) ============ */
+/* Pattern: styled brand button (visible) + Sweatpals iframe (transparent,
+   absolutely positioned on top) + Sweatpals script. The user sees our
+   button. The iframe catches every click and the script renders the
+   waitlist popup. */
 .rsvp-trigger {
   position: relative;
   display: inline-block;
   line-height: 0;
-  overflow: hidden;
-  border-radius: 999px;
   vertical-align: middle;
+  border-radius: 999px;
+  overflow: hidden;
 }
-.rsvp-trigger .btn {
-  line-height: 1.55;
+.rsvp-trigger > .btn {
   position: relative;
   z-index: 1;
+  line-height: 1.55;
   pointer-events: none;
   cursor: pointer;
+  width: 100%;
 }
-.rsvp-trigger__frame {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  border: 0 !important;
-  opacity: 0 !important;
-  cursor: pointer !important;
-  z-index: 5 !important;
-  pointer-events: auto !important;
-  background: transparent !important;
+.rsvp-trigger > iframe.rsvp-trigger__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  opacity: 0;
+  z-index: 5;
+  cursor: pointer;
+  background: transparent;
 }
-.rsvp-trigger--lg { min-width: 240px; }
-.rsvp-trigger--sm { min-width: 130px; }
+.rsvp-trigger--sm { width: 150px; }
+.rsvp-trigger--lg { width: 260px; }
+@media (max-width: 480px) {
+  .rsvp-trigger--lg { width: 100%; max-width: 320px; }
+}
