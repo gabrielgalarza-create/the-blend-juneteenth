@@ -1149,7 +1149,25 @@ button { font: inherit; }
   .footer__grid { grid-template-columns: 2fr 1fr 1fr 1fr; }
 }
 
-/* ============ RSVP TRIGGER ============ */
+/* ============ SWEATPALS EMBED (waitlist tier) ============ */
+/* Sweatpals injects its own button at the script tag location. Wrapper sets
+   minimum sizing so the layout reserves space and the injected button matches
+   our scale. The Sweatpals modal handles the waitlist signup popup. */
+.sweatpals-embed {
+  display: inline-block;
+  vertical-align: middle;
+}
+.sweatpals-embed--sm { min-width: 130px; }
+.sweatpals-embed--lg { min-width: 220px; }
+.sweatpals-embed button,
+.sweatpals-embed > button {
+  font-family: var(--display) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  border-radius: 999px !important;
+}
+
+/* ============ RSVP TRIGGER (legacy iframe overlay, kept for fallback) ============ */
 /* Visible styled button + invisible Sweatpals iframe button overlaid
    on top. Clicks land on the iframe button, which triggers Sweatpals's
    own native checkout popup via their script. */
