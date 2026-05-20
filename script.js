@@ -1,30 +1,12 @@
-// Pre-Register modal: open Sweatpals waitlist iframe on demand
+// Pre-Register: open Sweatpals waitlist signup in a new tab
 (function () {
-  const modal = document.getElementById('rsvpModal');
-  const frame = document.getElementById('rsvpFrame');
-  if (!modal || !frame) return;
-
   const RSVP_URL =
-    'https://sweatpals.com/embed/juneteenth-the-blend-coffee-and-rb-day-party?priceTierId=55dbd013-b471-4a04-9b76-c5b5b0bddd3d';
-
-  function openRsvp() {
-    if (frame.getAttribute('src') !== RSVP_URL) {
-      frame.setAttribute('src', RSVP_URL);
-    }
-    modal.classList.add('is-open');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('is-rsvp-open');
-  }
-  function closeRsvp() {
-    modal.classList.remove('is-open');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('is-rsvp-open');
-  }
+    'https://sweatpals.com/event/juneteenth-the-blend-coffee-and-rb-day-party/buy-ticket?priceTierId=55dbd013-b471-4a04-9b76-c5b5b0bddd3d';
 
   document.querySelectorAll('[data-rsvp-open]').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      openRsvp();
+      window.open(RSVP_URL, '_blank', 'noopener,noreferrer');
       if (window.amplitude) {
         const section = btn.closest('section');
         window.amplitude.track('cta_pre_register_clicked', {
@@ -33,12 +15,6 @@
         });
       }
     });
-  });
-  document.querySelectorAll('[data-rsvp-close]').forEach((el) => {
-    el.addEventListener('click', closeRsvp);
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('is-open')) closeRsvp();
   });
 })();
 
