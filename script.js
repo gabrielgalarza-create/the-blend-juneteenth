@@ -1,4 +1,4 @@
-// Tappable programming cards: toggle .is-open, pause parent rail auto-scroll, fire Amplitude event
+// Tappable programming cards: toggle .is-open, fire Amplitude event
 document.querySelectorAll('[data-card]').forEach((card) => {
   card.addEventListener('click', (e) => {
     if (e.target.closest('a')) return;
@@ -6,10 +6,6 @@ document.querySelectorAll('[data-card]').forEach((card) => {
     if (card.hasAttribute('aria-hidden')) return;
     const wasOpen = card.classList.contains('is-open');
     card.classList.toggle('is-open');
-
-    // Pause the parent rail's auto-scroll permanently once a card is opened
-    const rail = card.closest('[data-rail]');
-    if (rail && rail.__stopAuto) rail.__stopAuto(true);
 
     if (!wasOpen && window.amplitude) {
       const title = card.querySelector('.card__title');
@@ -20,7 +16,10 @@ document.querySelectorAll('[data-card]').forEach((card) => {
   });
 });
 
-// Carousel rails: arrow nav + gentle auto-scroll until user interacts
+// Carousel rails: continuous auto-scroll that seamlessly loops + arrow nav.
+// We duplicate the track contents in JS so once the user (or auto-scroll)
+// reaches the end of the original set, we silently jump scroll position
+// back to the start of the duplicate set, giving an infinite-loop feel.
 document.querySelectorAll('[data-rail]').forEach((rail) => {
   const viewport = rail.querySelector('.rail__viewport');
   const track = rail.querySelector('.rail__track');
@@ -28,67 +27,98 @@ document.querySelectorAll('[data-rail]').forEach((rail) => {
   const nextBtn = rail.querySelector('.rail__nav--next');
   if (!viewport || !track) return;
 
-  let autoTimer = null;
-  let stopped = false;
+  // Clone all cards once to enable seamless looping. Clones are marked
+  // aria-hidden so card-click handlers ignore them.
+  const originals = Array.from(track.children);
+  let originalsWidth = 0; // computed after layout
+  originals.forEach((card) => {
+    const clone = card.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    clone.setAttribute('tabindex', '-1');
+    track.appendChild(clone);
+  });
+
+  const measure = () => {
+    // Width of one original set (including the gap that follows it)
+    const styles = getComputedStyle(track);
+    const gap = parseFloat(styles.columnGap || styles.gap || '16') || 0;
+    let w = 0;
+    originals.forEach((c) => { w += c.offsetWidth + gap; });
+    originalsWidth = w;
+  };
 
   const stepSize = () => {
     const card = track.querySelector('.card--rail');
     if (!card) return viewport.clientWidth * 0.8;
     const styles = getComputedStyle(track);
-    const gap = parseFloat(styles.columnGap || styles.gap || '16');
+    const gap = parseFloat(styles.columnGap || styles.gap || '16') || 0;
     return card.offsetWidth + gap;
   };
 
-  const updateArrows = () => {
-    if (!prevBtn || !nextBtn) return;
-    const max = viewport.scrollWidth - viewport.clientWidth - 2;
-    const atStart = viewport.scrollLeft <= 2;
-    const atEnd = viewport.scrollLeft >= max;
-    prevBtn.style.opacity = atStart ? '0.3' : '1';
-    nextBtn.style.opacity = atEnd ? '0.3' : '1';
-    prevBtn.disabled = atStart;
-    nextBtn.disabled = atEnd;
+  // If scroll position has passed the originals set, wrap silently to
+  // the equivalent position within the originals set (no smooth scroll).
+  const normalize = () => {
+    if (!originalsWidth) return;
+    if (viewport.scrollLeft >= originalsWidth) {
+      viewport.scrollLeft = viewport.scrollLeft - originalsWidth;
+    } else if (viewport.scrollLeft < 0) {
+      viewport.scrollLeft = viewport.scrollLeft + originalsWidth;
+    }
+  };
+
+  let autoTimer = null;
+  let hoverPaused = false;
+
+  const tick = () => {
+    if (hoverPaused) return;
+    viewport.scrollBy({ left: stepSize(), behavior: 'smooth' });
   };
 
   const startAuto = () => {
-    if (stopped || autoTimer) return;
+    if (autoTimer) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    autoTimer = setInterval(() => {
-      const max = viewport.scrollWidth - viewport.clientWidth - 2;
-      if (viewport.scrollLeft >= max) {
-        viewport.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        viewport.scrollBy({ left: stepSize(), behavior: 'smooth' });
-      }
-    }, 4200);
+    autoTimer = setInterval(tick, 4200);
   };
 
-  const stopAuto = (permanent) => {
+  const stopAuto = () => {
     if (autoTimer) clearInterval(autoTimer);
     autoTimer = null;
-    if (permanent) stopped = true;
   };
-  rail.__stopAuto = stopAuto;
+
+  // Wrap after each smooth-scroll completes (~ 600ms is generous)
+  let normalizeTimer = null;
+  viewport.addEventListener('scroll', () => {
+    clearTimeout(normalizeTimer);
+    normalizeTimer = setTimeout(normalize, 500);
+  }, { passive: true });
 
   prevBtn?.addEventListener('click', () => {
-    stopAuto(true);
     viewport.scrollBy({ left: -stepSize(), behavior: 'smooth' });
   });
   nextBtn?.addEventListener('click', () => {
-    stopAuto(true);
     viewport.scrollBy({ left: stepSize(), behavior: 'smooth' });
   });
 
-  rail.addEventListener('mouseenter', () => stopAuto(false));
-  rail.addEventListener('mouseleave', () => { if (!stopped) startAuto(); });
-  viewport.addEventListener('touchstart', () => stopAuto(true), { passive: true });
-  viewport.addEventListener('wheel', () => stopAuto(true), { passive: true });
+  // Pause only while pointer is over the rail; resume on leave.
+  // Auto-scroll never stops permanently — it always resumes.
+  rail.addEventListener('mouseenter', () => { hoverPaused = true; });
+  rail.addEventListener('mouseleave', () => { hoverPaused = false; });
 
-  viewport.addEventListener('scroll', updateArrows, { passive: true });
-  updateArrows();
+  // Re-measure on resize
+  window.addEventListener('resize', () => {
+    requestAnimationFrame(measure);
+  });
 
-  // Start auto after a brief delay so the page settles first
-  setTimeout(startAuto, 2000);
+  // Wait for images to settle so widths are accurate
+  if (document.readyState === 'complete') {
+    measure();
+  } else {
+    window.addEventListener('load', measure, { once: true });
+  }
+  // Fallback in case the load event has already fired
+  setTimeout(measure, 600);
+
+  setTimeout(startAuto, 1800);
 });
 
 // Reveal-on-scroll for non-marquee cards (marquee cards animate via the track)
