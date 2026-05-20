@@ -1,9 +1,18 @@
-// Tappable programming cards: toggle .is-open, fire Amplitude event on expand
+// Tappable programming cards: toggle .is-open, pause parent marquee, fire Amplitude event
 document.querySelectorAll('[data-card]').forEach((card) => {
   card.addEventListener('click', (e) => {
     if (e.target.closest('a')) return;
+    if (card.hasAttribute('aria-hidden')) return; // ignore duplicate marquee clones
     const wasOpen = card.classList.contains('is-open');
     card.classList.toggle('is-open');
+
+    // Pause the parent marquee track while any card is open
+    const track = card.closest('.card-track');
+    if (track) {
+      const anyOpen = track.querySelector('.card.is-open');
+      track.classList.toggle('is-paused', !!anyOpen);
+    }
+
     if (!wasOpen && window.amplitude) {
       const title = card.querySelector('.card__title');
       window.amplitude.track('programming_card_expanded', {
@@ -13,7 +22,7 @@ document.querySelectorAll('[data-card]').forEach((card) => {
   });
 });
 
-// Reveal-on-scroll for cards (subtle)
+// Reveal-on-scroll for non-marquee cards (marquee cards animate via the track)
 const io = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
@@ -24,7 +33,7 @@ const io = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.card, .partner, .stat, .aud').forEach((el) => {
+document.querySelectorAll('.partner, .stat, .aud, .vendor').forEach((el) => {
   el.style.opacity = '0';
   el.style.transform = 'translateY(14px)';
   el.style.transition = 'opacity .5s ease, transform .5s ease';

@@ -611,6 +611,74 @@ button { font: inherit; }
   }
 }
 
+/* ============ CARD MARQUEE (horizontal scroll rail) ============ */
+.card-marquee {
+  overflow: hidden;
+  position: relative;
+  margin: 32px 0 0;
+  padding: 8px 0 16px;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+}
+.card-track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  padding: 0 24px;
+  animation: card-scroll 80s linear infinite;
+  will-change: transform;
+}
+.card-track--alt { animation-duration: 70s; }
+.card-track:hover { animation-play-state: paused; }
+.card-track.is-paused { animation-play-state: paused; }
+@keyframes card-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-track { animation: none; }
+}
+.card-track > .card--rail {
+  flex: 0 0 320px;
+  align-self: flex-start;
+}
+@media (max-width: 720px) {
+  .card-track > .card--rail { flex: 0 0 280px; }
+}
+
+/* Dark band card variant (VIP section) */
+.card--dark {
+  background: var(--ink-2);
+  border-color: rgba(255,255,255,.08);
+  color: var(--white);
+}
+.card--dark .card__title { color: var(--white); }
+.card--dark .card__sub { color: rgba(255,255,255,.7); }
+.card--dark .card__attr { color: rgba(255,255,255,.55); }
+.card--dark .card__expand p { color: rgba(255,255,255,.85); }
+.card--dark .card__toggle { background: var(--yellow); color: var(--black); }
+
+/* DJ card variant: portrait crop, no toggle */
+.card--dj .card__img { object-position: center top; }
+.card--dj .card__toggle { display: none; }
+
+/* Touch devices: swap the auto-marquee for a native swipeable rail */
+@media (hover: none) and (pointer: coarse) {
+  .card-marquee {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .card-marquee::-webkit-scrollbar { display: none; }
+  .card-track { animation: none; }
+  .card-track > .card--rail { scroll-snap-align: start; }
+  .card-track > [aria-hidden="true"] { display: none; }
+}
+
 /* ============ ACCESS BADGES (free vs paid) ============ */
 .access-key {
   display: flex;
