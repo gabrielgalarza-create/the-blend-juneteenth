@@ -568,11 +568,43 @@
   </div>
 </section>
 
-<!-- Sweatpals widget host: rendered off-screen so it never shows visually,
-     but the script is fully loaded. Our Pre-Register buttons find the
-     widget's checkout trigger inside this host and click it programmatically. -->
-<div id="sweatpals-host" aria-hidden="true" tabindex="-1">
-  <script src="https://sweatpals.com/static/embed/event/checkout/script.js?enableAutoEmbed=true&eventAlias=juneteenth-the-blend-coffee-and-rb-day-party&colorHex=ffffff&backgroundHex=000000&fontFamily=Poppins&priceTierId=55dbd013-b471-4a04-9b76-c5b5b0bddd3d"></script>
+<!-- Pre-Register modal: custom branded waitlist form, submits to Mailchimp -->
+<div class="rsvp-modal" id="rsvpModal" aria-hidden="true">
+  <button class="rsvp-modal__backdrop" type="button" data-rsvp-close aria-label="Close"></button>
+  <div class="rsvp-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle">
+    <button class="rsvp-modal__close" type="button" data-rsvp-close aria-label="Close">×</button>
+
+    <div class="rsvp-modal__body" id="rsvpFormView">
+      <h2 id="rsvpTitle" class="rsvp-modal__title">Join the waitlist</h2>
+      <p class="rsvp-modal__lede">Enter your contact info and we'll notify you the moment tickets go live.</p>
+      <form id="rsvpForm" class="rsvp-form" novalidate>
+        <label class="rsvp-field">
+          <span class="rsvp-field__label">Full Name</span>
+          <input class="rsvp-field__input" type="text" name="FULLNAME" required autocomplete="name" />
+        </label>
+        <label class="rsvp-field">
+          <span class="rsvp-field__label">Phone Number</span>
+          <input class="rsvp-field__input" type="tel" name="PHONE" required autocomplete="tel" placeholder="(555) 555-5555" />
+        </label>
+        <label class="rsvp-field">
+          <span class="rsvp-field__label">Email</span>
+          <input class="rsvp-field__input" type="email" name="EMAIL" required autocomplete="email" />
+        </label>
+        <label class="rsvp-consent">
+          <input type="checkbox" name="CONSENT" checked />
+          <span>By submitting this form, you consent to receive marketing emails and texts from Over The Top about The Blend and future events. Msg &amp; data rates may apply. Unsubscribe any time by replying STOP.</span>
+        </label>
+        <button type="submit" class="btn btn--yellow btn--lg rsvp-form__submit" id="rsvpSubmit">Confirm</button>
+        <p class="rsvp-form__error" id="rsvpError" hidden></p>
+      </form>
+    </div>
+
+    <div class="rsvp-modal__body rsvp-modal__success" id="rsvpSuccessView" hidden>
+      <h2 class="rsvp-modal__title">You're on the list.</h2>
+      <p class="rsvp-modal__lede">We'll text and email you when tickets go live. See you on Juneteenth weekend.</p>
+      <button type="button" class="btn btn--yellow btn--lg" data-rsvp-close>Done</button>
+    </div>
+  </div>
 </div>
 
 <script src="script.js"></script>

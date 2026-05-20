@@ -1279,6 +1279,141 @@ body.is-rsvp-open { overflow: hidden; }
   .sweatpals-widget--lg { width: 100%; max-width: 360px; }
 }
 
+/* ============ PRE-REGISTER MODAL (custom waitlist form) ============ */
+.rsvp-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.rsvp-modal.is-open { display: flex; }
+body.is-rsvp-open { overflow: hidden; }
+
+.rsvp-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.78);
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.rsvp-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(96vw, 460px);
+  max-height: 92vh;
+  overflow-y: auto;
+  background: var(--black);
+  color: var(--white);
+  border-radius: 22px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.5);
+  padding: 32px 28px 28px;
+  font-family: var(--body);
+}
+.rsvp-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.1);
+  color: var(--white);
+  border: 0;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s ease, transform .15s ease;
+}
+.rsvp-modal__close:hover { background: rgba(255,255,255,.2); transform: scale(1.05); }
+.rsvp-modal__title {
+  font-family: var(--display);
+  font-size: 26px;
+  letter-spacing: 0;
+  text-transform: none;
+  margin: 4px 0 8px;
+  text-align: center;
+}
+.rsvp-modal__lede {
+  margin: 0 0 22px;
+  text-align: center;
+  color: rgba(255,255,255,.75);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.rsvp-form { display: flex; flex-direction: column; gap: 12px; }
+.rsvp-field { display: block; }
+.rsvp-field__label {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+  margin-bottom: 6px;
+}
+.rsvp-field__input {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  color: var(--white);
+  font-family: var(--body);
+  font-size: 16px;
+  outline: none;
+  transition: border-color .15s ease, background .15s ease;
+}
+.rsvp-field__input:focus {
+  border-color: var(--yellow);
+  background: rgba(255,255,255,.12);
+}
+.rsvp-field__input::placeholder { color: rgba(255,255,255,.35); }
+
+.rsvp-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255,255,255,.6);
+  margin: 6px 0 8px;
+}
+.rsvp-consent input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  accent-color: var(--yellow);
+  cursor: pointer;
+}
+
+.rsvp-form__submit {
+  width: 100%;
+  margin-top: 6px;
+  border-radius: 999px;
+}
+.rsvp-form__submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.rsvp-form__error {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #ff8a80;
+  text-align: center;
+}
+
+.rsvp-modal__success { text-align: center; }
+.rsvp-modal__success .btn { display: inline-block; margin-top: 12px; }
+
 /* ============ SWEATPALS HIDDEN HOST ============ */
 /* Renders the auto-embed widget off-screen so Sweatpals's script and its
    click-to-popup handler are loaded, but no widget content is visible.
