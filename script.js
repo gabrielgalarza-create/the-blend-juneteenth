@@ -1,50 +1,136 @@
-// Pre-Register: our styled buttons trigger the Sweatpals checkout popup
-// by programmatically clicking the trigger that lives inside the hidden
-// #sweatpals-host widget. Falls back to opening the canonical event URL
-// in a new tab if the widget hasn't rendered yet or the trigger can't be
-// found (covers slow Sweatpals load + JS-disabled cases).
+// Pre-Register modal: open our custom waitlist modal, submit to Mailchimp via JSONP
 (function () {
-  const FALLBACK_URL =
-    'https://sweatpals.com/event/juneteenth-the-blend-coffee-and-rb-day-party';
+  const modal = document.getElementById('rsvpModal');
+  const formView = document.getElementById('rsvpFormView');
+  const successView = document.getElementById('rsvpSuccessView');
+  const form = document.getElementById('rsvpForm');
+  const submitBtn = document.getElementById('rsvpSubmit');
+  const errorEl = document.getElementById('rsvpError');
+  if (!modal || !form) return;
 
-  function findSweatpalsTrigger() {
-    const host = document.getElementById('sweatpals-host');
-    if (!host) return null;
-    // Try by likely text first
-    const candidates = host.querySelectorAll('button, [role="button"], a');
-    for (const el of candidates) {
-      const t = (el.textContent || '').toLowerCase();
-      if (
-        t.includes('notif') ||
-        t.includes('access') ||
-        t.includes('register') ||
-        t.includes('rsvp') ||
-        t.includes('waitlist') ||
-        t.includes('ticket')
-      ) {
-        return el;
-      }
-    }
-    // Last resort: last button-like in the host (often the CTA)
-    return candidates.length ? candidates[candidates.length - 1] : null;
+  // Mailchimp JSONP endpoint (same list as the Webflow form on overthetopxp.com)
+  const MAILCHIMP_BASE = 'https://gabrielgalarza.us18.list-manage.com/subscribe/post-json';
+  const MC_PARAMS = {
+    u: '770afc94ea851d5a95b24c393',
+    id: '2da8ac5900',
+    f_id: '0031a3e6f0',
+    tags: '2993184'
+  };
+
+  function openModal() {
+    formView.hidden = false;
+    successView.hidden = true;
+    errorEl.hidden = true;
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Confirm';
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('is-rsvp-open');
+    // Focus first input for keyboard users
+    const firstInput = form.querySelector('input[type="text"]');
+    if (firstInput) setTimeout(() => firstInput.focus(), 30);
+  }
+  function closeModal() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('is-rsvp-open');
   }
 
   document.querySelectorAll('[data-rsvp-open]').forEach((btn) => {
     btn.addEventListener('click', (e) => {
-      const trigger = findSweatpalsTrigger();
-      if (trigger) {
-        e.preventDefault();
-        trigger.click();
-      }
-      // else: fall through to the anchor's href (opens FALLBACK_URL in a tab)
+      e.preventDefault();
+      openModal();
       if (window.amplitude) {
         const section = btn.closest('section');
         window.amplitude.track('cta_pre_register_clicked', {
-          location: section ? section.id || 'unknown' : 'nav',
-          method: trigger ? 'popup' : 'new_tab'
+          location: section ? section.id || 'unknown' : 'nav'
         });
       }
     });
+  });
+  document.querySelectorAll('[data-rsvp-close]').forEach((el) => {
+    el.addEventListener('click', closeModal);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+  });
+
+  function showError(msg) {
+    errorEl.textContent = msg || 'Something went wrong. Please try again.';
+    errorEl.hidden = false;
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Confirm';
+  }
+
+  // JSONP submission so we can stay in the modal and show success/error inline
+  function submitToMailchimp(data) {
+    return new Promise((resolve, reject) => {
+      const cb = 'mcCb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+      window[cb] = (response) => {
+        delete window[cb];
+        if (scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl);
+        resolve(response);
+      };
+      const params = new URLSearchParams({ ...MC_PARAMS, ...data, c: cb });
+      const scriptEl = document.createElement('script');
+      scriptEl.src = MAILCHIMP_BASE + '?' + params.toString();
+      scriptEl.onerror = () => {
+        delete window[cb];
+        if (scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl);
+        reject(new Error('Network error'));
+      };
+      document.body.appendChild(scriptEl);
+    });
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorEl.hidden = true;
+
+    const fullName = form.FULLNAME.value.trim();
+    const email = form.EMAIL.value.trim();
+    const phone = form.PHONE.value.trim();
+
+    if (!fullName || !email || !phone) {
+      showError('Please fill in all fields.');
+      return;
+    }
+
+    // Split full name into first + last for Mailchimp
+    const parts = fullName.split(/\s+/);
+    const fname = parts[0] || '';
+    const lname = parts.slice(1).join(' ') || '';
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    try {
+      const response = await submitToMailchimp({
+        FNAME: fname,
+        LNAME: lname,
+        EMAIL: email,
+        PHONE: phone
+      });
+      if (response && response.result === 'success') {
+        formView.hidden = true;
+        successView.hidden = false;
+        if (window.amplitude) {
+          window.amplitude.track('rsvp_submitted', { email_provided: true });
+        }
+      } else {
+        // Mailchimp returns "Member Exists" errors with result: error, msg: ...
+        const msg = (response && response.msg) || 'Something went wrong.';
+        // Friendlier "already subscribed" message
+        if (/already/i.test(msg) || /is already a list/i.test(msg)) {
+          formView.hidden = true;
+          successView.hidden = false;
+        } else {
+          showError(msg.replace(/<[^>]+>/g, ''));
+        }
+      }
+    } catch (err) {
+      showError('Network error. Please try again or email experienceott@gmail.com.');
+    }
   });
 })();
 
