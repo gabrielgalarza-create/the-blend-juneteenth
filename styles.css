@@ -896,6 +896,15 @@ button { font: inherit; }
 @media (min-width: 720px) {
   .presenting { grid-template-columns: 280px 1fr; gap: 36px; padding: 32px 36px; }
 }
+.presenting--logo-only {
+  grid-template-columns: 1fr !important;
+  justify-items: center;
+  padding: 28px;
+}
+.presenting--logo-only .presenting__logo {
+  max-width: 360px;
+  width: 100%;
+}
 
 .vendor-grid {
   display: grid;
