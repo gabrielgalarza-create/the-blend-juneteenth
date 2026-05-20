@@ -1,34 +1,19 @@
-// Pre-Register modal: open our custom waitlist modal, submit to Mailchimp via JSONP
+// Pre-Register modal: opens a modal that iframes the Sweatpals event page,
+// so users sign up using the exact Sweatpals popup flow.
 (function () {
   const modal = document.getElementById('rsvpModal');
-  const formView = document.getElementById('rsvpFormView');
-  const successView = document.getElementById('rsvpSuccessView');
-  const form = document.getElementById('rsvpForm');
-  const submitBtn = document.getElementById('rsvpSubmit');
-  const errorEl = document.getElementById('rsvpError');
-  if (!modal || !form) return;
+  const frame = document.getElementById('rsvpFrame');
+  if (!modal || !frame) return;
 
-  // Mailchimp JSONP endpoint (same list as the Webflow form on overthetopxp.com)
-  const MAILCHIMP_BASE = 'https://gabrielgalarza.us18.list-manage.com/subscribe/post-json';
-  const MC_PARAMS = {
-    u: '770afc94ea851d5a95b24c393',
-    id: '2da8ac5900',
-    f_id: '0031a3e6f0',
-    tags: '2993184'
-  };
+  const RSVP_URL = 'https://sweatpals.com/event/juneteenth-the-blend-coffee-and-rb-day-party';
 
   function openModal() {
-    formView.hidden = false;
-    successView.hidden = true;
-    errorEl.hidden = true;
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Confirm';
+    if (frame.getAttribute('src') !== RSVP_URL) {
+      frame.setAttribute('src', RSVP_URL);
+    }
     modal.classList.add('is-open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('is-rsvp-open');
-    // Focus first input for keyboard users
-    const firstInput = form.querySelector('input[type="text"]');
-    if (firstInput) setTimeout(() => firstInput.focus(), 30);
   }
   function closeModal() {
     modal.classList.remove('is-open');
@@ -53,84 +38,6 @@
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
-  });
-
-  function showError(msg) {
-    errorEl.textContent = msg || 'Something went wrong. Please try again.';
-    errorEl.hidden = false;
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Confirm';
-  }
-
-  // JSONP submission so we can stay in the modal and show success/error inline
-  function submitToMailchimp(data) {
-    return new Promise((resolve, reject) => {
-      const cb = 'mcCb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-      window[cb] = (response) => {
-        delete window[cb];
-        if (scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl);
-        resolve(response);
-      };
-      const params = new URLSearchParams({ ...MC_PARAMS, ...data, c: cb });
-      const scriptEl = document.createElement('script');
-      scriptEl.src = MAILCHIMP_BASE + '?' + params.toString();
-      scriptEl.onerror = () => {
-        delete window[cb];
-        if (scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl);
-        reject(new Error('Network error'));
-      };
-      document.body.appendChild(scriptEl);
-    });
-  }
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    errorEl.hidden = true;
-
-    const fullName = form.FULLNAME.value.trim();
-    const email = form.EMAIL.value.trim();
-    const phone = form.PHONE.value.trim();
-
-    if (!fullName || !email || !phone) {
-      showError('Please fill in all fields.');
-      return;
-    }
-
-    // Split full name into first + last for Mailchimp
-    const parts = fullName.split(/\s+/);
-    const fname = parts[0] || '';
-    const lname = parts.slice(1).join(' ') || '';
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting…';
-
-    try {
-      const response = await submitToMailchimp({
-        FNAME: fname,
-        LNAME: lname,
-        EMAIL: email,
-        PHONE: phone
-      });
-      if (response && response.result === 'success') {
-        formView.hidden = true;
-        successView.hidden = false;
-        if (window.amplitude) {
-          window.amplitude.track('rsvp_submitted', { email_provided: true });
-        }
-      } else {
-        // Mailchimp returns "Member Exists" errors with result: error, msg: ...
-        const msg = (response && response.msg) || 'Something went wrong.';
-        // Friendlier "already subscribed" message
-        if (/already/i.test(msg) || /is already a list/i.test(msg)) {
-          formView.hidden = true;
-          successView.hidden = false;
-        } else {
-          showError(msg.replace(/<[^>]+>/g, ''));
-        }
-      }
-    } catch (err) {
-      showError('Network error. Please try again or email experienceott@gmail.com.');
-    }
   });
 })();
 
