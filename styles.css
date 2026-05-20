@@ -611,7 +611,73 @@ button { font: inherit; }
   }
 }
 
-/* ============ CARD MARQUEE (horizontal scroll rail) ============ */
+/* ============ RAIL (contained scroll carousel with arrows) ============ */
+.rail {
+  position: relative;
+  margin-top: 12px;
+}
+.rail__viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 2.5%, #000 97.5%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 2.5%, #000 97.5%, transparent);
+  padding: 8px 0 16px;
+}
+.rail__viewport::-webkit-scrollbar { display: none; }
+.rail__track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+}
+.rail__track > .card--rail {
+  flex: 0 0 320px;
+  scroll-snap-align: start;
+  align-self: flex-start;
+}
+@media (max-width: 720px) {
+  .rail__track > .card--rail { flex: 0 0 260px; }
+}
+
+.rail__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--black);
+  color: var(--yellow);
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 22px rgba(0,0,0,.25);
+  transition: transform .15s ease, background .15s ease, opacity .2s ease;
+  padding: 0;
+}
+.rail__nav:hover { transform: translateY(-50%) scale(1.08); background: var(--ink-2); }
+.rail__nav--prev { left: -22px; }
+.rail__nav--next { right: -22px; }
+.band--dark .rail__nav { background: var(--yellow); color: var(--black); }
+.band--dark .rail__nav:hover { background: var(--yellow-deep); }
+@media (max-width: 880px) {
+  .rail__nav--prev { left: -10px; }
+  .rail__nav--next { right: -10px; }
+}
+@media (max-width: 720px) {
+  .rail__nav { display: none; }
+}
+
+/* ============ CARD MARQUEE (legacy, kept for reference) ============ */
 .card-marquee {
   overflow: hidden;
   position: relative;
