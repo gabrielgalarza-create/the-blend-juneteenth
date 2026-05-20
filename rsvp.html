@@ -13,22 +13,13 @@
     color: #fff;
     font-family: Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     min-height: 100vh;
+    overflow: auto;
   }
-  /* Hide Sweatpals's auto-embedded event-card content so only the popup
-     overlay (which mounts to document.body) is visible after auto-click. */
-  body > *:not(#sweatpals-host):not(.MuiModal-root):not(.swtp-mui-style-m8dnq0) {
-    /* leave other items normal */
-  }
-  #sweatpals-host {
-    visibility: hidden;
-    position: fixed;
-    left: -99999px;
-    top: 0;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-  }
-  /* Loading state shown until Sweatpals popup mounts */
+  body { padding: 24px 20px; box-sizing: border-box; }
+  /* Hide the widget once we've successfully clicked the trigger so only
+     the Sweatpals popup overlay remains visible. */
+  body.is-popup-open #sweatpals-host { visibility: hidden; }
+  /* Loading hint while we wait for Sweatpals's script to render */
   #loading {
     position: fixed;
     inset: 0;
@@ -40,28 +31,28 @@
     letter-spacing: 0.04em;
     pointer-events: none;
     transition: opacity .3s ease;
+    z-index: -1;
   }
-  #loading.is-hidden { opacity: 0; }
+  body.is-popup-open #loading { display: none; }
 </style>
 </head>
 <body>
 
 <div id="loading">Loading waitlist…</div>
 
-<!-- Sweatpals auto-embed: invisible widget, used only to bootstrap the popup -->
-<div id="sweatpals-host" aria-hidden="true">
+<!-- Sweatpals auto-embed widget. Renders inline; we auto-click its
+     "Click to get Notified + Early Access" button as soon as it appears
+     so the Sweatpals Join Waitlist popup mounts. -->
+<div id="sweatpals-host">
   <script src="https://sweatpals.com/static/embed/event/checkout/script.js?enableAutoEmbed=true&eventAlias=juneteenth-the-blend-coffee-and-rb-day-party&colorHex=ffffff&backgroundHex=000000&fontFamily=Poppins&priceTierId=55dbd013-b471-4a04-9b76-c5b5b0bddd3d"></script>
 </div>
 
 <script>
-  // Watch for Sweatpals to inject the early-access trigger button anywhere on the
-  // page, then click it programmatically so the Join Waitlist popup opens.
   (function () {
-    const loading = document.getElementById('loading');
     let clicked = false;
+    const start = Date.now();
 
     function findTrigger() {
-      // Look across the whole document since Sweatpals may inject outside our host
       const candidates = document.querySelectorAll('button, [role="button"], a');
       for (const el of candidates) {
         const text = (el.textContent || '').trim().toLowerCase();
@@ -69,11 +60,9 @@
           text.includes('notif') ||
           text.includes('early access') ||
           text.includes('waitlist') ||
-          text.includes('join waitlist') ||
+          text.includes('get notified') ||
           text.includes('rsvp') ||
-          text.includes('pre-register') ||
-          text.includes('preregister') ||
-          text.includes('get notified')
+          text.includes('register')
         ) {
           return el;
         }
@@ -86,26 +75,25 @@
       const t = findTrigger();
       if (t) {
         clicked = true;
-        t.click();
-        // Hide the loading once the popup has mounted
-        setTimeout(() => { loading.classList.add('is-hidden'); }, 250);
+        try { t.click(); } catch (e) {}
+        // Hide the widget once the popup overlays the page
+        setTimeout(() => { document.body.classList.add('is-popup-open'); }, 300);
         return true;
       }
       return false;
     }
 
-    // Poll for the trigger button (covers both immediate-render and slow-render cases)
-    const start = Date.now();
+    // Poll until found or 15s elapsed
     const poll = setInterval(() => {
-      if (tryClick() || Date.now() - start > 10000) {
+      if (tryClick() || Date.now() - start > 15000) {
         clearInterval(poll);
       }
-    }, 150);
+    }, 200);
 
-    // Also watch for DOM changes (covers React-rendered injection)
+    // Also react to DOM changes for React-rendered injection
     const observer = new MutationObserver(() => { if (tryClick()) observer.disconnect(); });
     observer.observe(document.documentElement, { childList: true, subtree: true });
-    setTimeout(() => observer.disconnect(), 10000);
+    setTimeout(() => observer.disconnect(), 15000);
   })();
 </script>
 
