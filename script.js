@@ -1,7 +1,7 @@
 // Pre-Register: open Sweatpals waitlist signup in a new tab
 (function () {
   const RSVP_URL =
-    'https://sweatpals.com/event/juneteenth-the-blend-coffee-and-rb-day-party/buy-ticket?priceTierId=55dbd013-b471-4a04-9b76-c5b5b0bddd3d';
+    'https://sweatpals.com/event/juneteenth-the-blend-coffee-and-rb-day-party?priceTierId=55dbd013-b471-4a04-9b76-c5b5b0bddd3d';
 
   document.querySelectorAll('[data-rsvp-open]').forEach((btn) => {
     btn.addEventListener('click', (e) => {
