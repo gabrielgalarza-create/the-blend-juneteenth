@@ -1279,6 +1279,22 @@ body.is-rsvp-open { overflow: hidden; }
   .sweatpals-widget--lg { width: 100%; max-width: 360px; }
 }
 
+/* ============ SWEATPALS HIDDEN HOST ============ */
+/* Renders the auto-embed widget off-screen so Sweatpals's script and its
+   click-to-popup handler are loaded, but no widget content is visible.
+   Our Pre-Register buttons trigger the popup by .click()-ing the widget's
+   internal trigger element. */
+#sweatpals-host {
+  position: fixed;
+  left: -10000px;
+  top: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ============ RSVP AUTO-EMBED (Sweatpals auto-injected button) ============ */
 /* With enableAutoEmbed=true Sweatpals injects its own styled button next to
    the script tag. The wrapper just reserves layout space and sets sizing. */

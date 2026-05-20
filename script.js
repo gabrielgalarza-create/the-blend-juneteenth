@@ -1,16 +1,52 @@
-// Pre-Register CTAs: clicks on the .rsvp-trigger wrappers go to the
-// Sweatpals iframe inside, which triggers the waitlist popup via the
-// script loaded in <head>. No JS handler needed here. Analytics is
-// tracked separately via the .rsvp-trigger click listener below.
-document.querySelectorAll('.rsvp-trigger').forEach((el) => {
-  el.addEventListener('click', () => {
-    if (!window.amplitude) return;
-    const section = el.closest('section');
-    window.amplitude.track('cta_pre_register_clicked', {
-      location: section ? section.id || 'unknown' : 'nav'
+// Pre-Register: our styled buttons trigger the Sweatpals checkout popup
+// by programmatically clicking the trigger that lives inside the hidden
+// #sweatpals-host widget. Falls back to opening the canonical event URL
+// in a new tab if the widget hasn't rendered yet or the trigger can't be
+// found (covers slow Sweatpals load + JS-disabled cases).
+(function () {
+  const FALLBACK_URL =
+    'https://sweatpals.com/event/juneteenth-the-blend-coffee-and-rb-day-party';
+
+  function findSweatpalsTrigger() {
+    const host = document.getElementById('sweatpals-host');
+    if (!host) return null;
+    // Try by likely text first
+    const candidates = host.querySelectorAll('button, [role="button"], a');
+    for (const el of candidates) {
+      const t = (el.textContent || '').toLowerCase();
+      if (
+        t.includes('notif') ||
+        t.includes('access') ||
+        t.includes('register') ||
+        t.includes('rsvp') ||
+        t.includes('waitlist') ||
+        t.includes('ticket')
+      ) {
+        return el;
+      }
+    }
+    // Last resort: last button-like in the host (often the CTA)
+    return candidates.length ? candidates[candidates.length - 1] : null;
+  }
+
+  document.querySelectorAll('[data-rsvp-open]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const trigger = findSweatpalsTrigger();
+      if (trigger) {
+        e.preventDefault();
+        trigger.click();
+      }
+      // else: fall through to the anchor's href (opens FALLBACK_URL in a tab)
+      if (window.amplitude) {
+        const section = btn.closest('section');
+        window.amplitude.track('cta_pre_register_clicked', {
+          location: section ? section.id || 'unknown' : 'nav',
+          method: trigger ? 'popup' : 'new_tab'
+        });
+      }
     });
   });
-});
+})();
 
 // Tappable programming cards: toggle .is-open, fire Amplitude event
 document.querySelectorAll('[data-card]').forEach((card) => {
