@@ -1,22 +1,16 @@
-// Pre-Register: open Sweatpals waitlist signup in a new tab
-(function () {
-  const RSVP_URL =
-    'https://sweatpals.com/event/juneteenth-the-blend-coffee-and-rb-day-party?priceTierId=55dbd013-b471-4a04-9b76-c5b5b0bddd3d';
-
-  document.querySelectorAll('[data-rsvp-open]').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.open(RSVP_URL, '_blank', 'noopener,noreferrer');
-      if (window.amplitude) {
-        const section = btn.closest('section');
-        window.amplitude.track('cta_pre_register_clicked', {
-          location: section ? section.id || 'unknown' : 'nav',
-          text: btn.textContent.trim()
-        });
-      }
+// Pre-Register CTAs: clicks on the .rsvp-trigger wrappers go to the
+// Sweatpals iframe inside, which triggers the waitlist popup via the
+// script loaded in <head>. No JS handler needed here. Analytics is
+// tracked separately via the .rsvp-trigger click listener below.
+document.querySelectorAll('.rsvp-trigger').forEach((el) => {
+  el.addEventListener('click', () => {
+    if (!window.amplitude) return;
+    const section = el.closest('section');
+    window.amplitude.track('cta_pre_register_clicked', {
+      location: section ? section.id || 'unknown' : 'nav'
     });
   });
-})();
+});
 
 // Tappable programming cards: toggle .is-open, fire Amplitude event
 document.querySelectorAll('[data-card]').forEach((card) => {
