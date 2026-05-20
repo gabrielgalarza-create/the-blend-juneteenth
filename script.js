@@ -5,7 +5,7 @@
   const frame = document.getElementById('rsvpFrame');
   if (!modal || !frame) return;
 
-  const RSVP_URL = 'https://sweatpals.com/event/juneteenth-the-blend-coffee-and-rb-day-party';
+  const RSVP_URL = 'rsvp.html';
 
   function openModal() {
     if (frame.getAttribute('src') !== RSVP_URL) {
