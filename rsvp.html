@@ -16,10 +16,10 @@
     overflow: auto;
   }
   body { padding: 24px 20px; box-sizing: border-box; }
-  /* Hide the widget once we've successfully clicked the trigger so only
-     the Sweatpals popup overlay remains visible. */
-  body.is-popup-open #sweatpals-host { visibility: hidden; }
-  /* Loading hint while we wait for Sweatpals's script to render */
+  /* Once we've successfully clicked the trigger, hide everything except
+     the Sweatpals popup (which mounts as a MUI modal at root). */
+  body.is-popup-open #sweatpals-host { visibility: hidden; pointer-events: none; }
+  body.is-popup-open #loading { display: none; }
   #loading {
     position: fixed;
     inset: 0;
@@ -30,10 +30,8 @@
     font-size: 14px;
     letter-spacing: 0.04em;
     pointer-events: none;
-    transition: opacity .3s ease;
     z-index: -1;
   }
-  body.is-popup-open #loading { display: none; }
 </style>
 </head>
 <body>
@@ -52,45 +50,51 @@
     let clicked = false;
     const start = Date.now();
 
+    // Match only the exact Sweatpals trigger button by its label
     function findTrigger() {
-      const candidates = document.querySelectorAll('button, [role="button"], a');
-      for (const el of candidates) {
+      const els = document.querySelectorAll(
+        '#sweatpals-host button, #sweatpals-host [role="button"], button, [role="button"]'
+      );
+      for (const el of els) {
         const text = (el.textContent || '').trim().toLowerCase();
-        if (
-          text.includes('notif') ||
-          text.includes('early access') ||
-          text.includes('waitlist') ||
-          text.includes('get notified') ||
-          text.includes('rsvp') ||
-          text.includes('register')
-        ) {
+        if (text.includes('notified') && (text.includes('early access') || text.includes('click'))) {
           return el;
         }
+        if (text.includes('join waitlist') || text.includes('get notified')) return el;
       }
       return null;
+    }
+
+    // Fire a full pointer/mouse event sequence so React's synthetic event
+    // handlers fire (a plain .click() is often ignored by MUI/React).
+    function realisticClick(el) {
+      try {
+        el.scrollIntoView({ block: 'center', inline: 'center' });
+        const opts = { bubbles: true, cancelable: true, view: window, button: 0 };
+        ['pointerover','pointerenter','pointerdown','mousedown','pointerup','mouseup','click'].forEach((type) => {
+          const Ev = type.startsWith('pointer') && window.PointerEvent ? PointerEvent : MouseEvent;
+          el.dispatchEvent(new Ev(type, opts));
+        });
+        if (typeof el.click === 'function') el.click();
+      } catch (e) {}
     }
 
     function tryClick() {
       if (clicked) return true;
       const t = findTrigger();
-      if (t) {
-        clicked = true;
-        try { t.click(); } catch (e) {}
-        // Hide the widget once the popup overlays the page
-        setTimeout(() => { document.body.classList.add('is-popup-open'); }, 300);
-        return true;
-      }
-      return false;
+      if (!t) return false;
+      clicked = true;
+      realisticClick(t);
+      setTimeout(() => { document.body.classList.add('is-popup-open'); }, 350);
+      return true;
     }
 
-    // Poll until found or 15s elapsed
     const poll = setInterval(() => {
       if (tryClick() || Date.now() - start > 15000) {
         clearInterval(poll);
       }
     }, 200);
 
-    // Also react to DOM changes for React-rendered injection
     const observer = new MutationObserver(() => { if (tryClick()) observer.disconnect(); });
     observer.observe(document.documentElement, { childList: true, subtree: true });
     setTimeout(() => observer.disconnect(), 15000);
