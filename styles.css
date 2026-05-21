@@ -1454,40 +1454,25 @@ body.is-rsvp-open { overflow: hidden; }
 .rsvp-autoembed--sm { min-width: 130px; }
 .rsvp-autoembed--lg { min-width: 240px; }
 
-/* ============ RSVP TRIGGER (Sweatpals widget overlay, unused) ============ */
-/* Pattern: styled brand button (visible) + Sweatpals iframe (transparent,
-   absolutely positioned on top) + Sweatpals script. The user sees our
-   button. The iframe catches every click and the script renders the
-   waitlist popup. */
+/* ============ RSVP TRIGGER (Sweatpals iframe overlay) ============ */
+/* Visible OTT-styled pill button sits behind; the Sweatpals iframe
+   sits absolutely on top with opacity 0. Clicks land on the iframe's
+   Sweatpals button, which the checkout script (at end of body)
+   intercepts to open the registration modal inline.
+   Pattern from SF Fit Fest (PR #52). */
 .rsvp-trigger {
   position: relative;
   display: inline-block;
   line-height: 0;
-  vertical-align: middle;
-  border-radius: 999px;
-  overflow: hidden;
 }
-.rsvp-trigger > .btn {
-  position: relative;
-  z-index: 1;
-  line-height: 1.55;
-  pointer-events: none;
-  cursor: pointer;
-  width: 100%;
-}
-.rsvp-trigger > iframe.rsvp-trigger__frame {
+.rsvp-trigger .btn { line-height: 1.55; }
+.rsvp-trigger__frame {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   border: 0;
   opacity: 0;
-  z-index: 5;
   cursor: pointer;
-  background: transparent;
-}
-.rsvp-trigger--sm { width: 150px; }
-.rsvp-trigger--lg { width: 260px; }
-@media (max-width: 480px) {
-  .rsvp-trigger--lg { width: 100%; max-width: 320px; }
+  z-index: 2;
 }
