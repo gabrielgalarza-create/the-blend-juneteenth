@@ -9,3 +9,35 @@ e.g. https://gabrielgalarza-create.github.io/the-blend-juneteenth/ -->
 <iframe src="https://<your-gh-pages-url>/" title="The Blend: Coffee & R&B Day Party"
         style="display:block; width:100%; height:100vh; border:0;" loading="lazy">
 </iframe>
+
+<!-- ===========================================================================
+META PIXEL — IMPORTANT FOR AD ATTRIBUTION
+
+The pixel is already inside the GitHub Pages page above, but that page loads in a
+nested iframe. Meta attributes conversions far more reliably when the pixel ALSO
+fires on the TOP-LEVEL page the ad actually lands on (the Webflow page).
+
+Add the snippet below to the Webflow page head:
+  Webflow → Page Settings (the specific event page) → Custom Code → "Inside <head> tag"
+  (or Site Settings → Custom Code → Head Code to track every page).
+
+This is the same pixel ID (1495548463835448), so events de-duplicate correctly.
+============================================================================ -->
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1495548463835448');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1495548463835448&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
