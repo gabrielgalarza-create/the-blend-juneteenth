@@ -146,6 +146,11 @@ document.querySelectorAll('.partner, .stat, .aud, .vendor').forEach((el) => {
       window.amplitude.track(name, props || {});
     }
   }
+  function metaTrack(name, props) {
+    if (typeof window.fbq === 'function') {
+      window.fbq('track', name, props || {});
+    }
+  }
 
   // Pre-register CTA clicks (any of the pre-register buttons or links)
   document.querySelectorAll(
@@ -177,6 +182,25 @@ document.querySelectorAll('.partner, .stat, .aud, .vendor').forEach((el) => {
   const sponsorEmail = document.querySelector('a[href^="mailto:gabrgalarza"]');
   if (sponsorEmail) {
     sponsorEmail.addEventListener('click', () => track('sponsor_email_clicked'));
+  }
+
+  // Pre-register intent as a Meta "Lead". The actual Pre-Register buttons are
+  // cross-origin Sweatpals iframes, so we can't attach a click handler to them.
+  // Instead we detect a click landing inside one: clicking a cross-origin iframe
+  // blurs the parent window and makes that iframe document.activeElement.
+  // Fired once per page view to avoid double-counting.
+  let leadFired = false;
+  const frames = document.querySelectorAll('.rsvp-trigger__frame');
+  if (frames.length) {
+    window.addEventListener('blur', () => {
+      if (leadFired) return;
+      const el = document.activeElement;
+      if (el && el.tagName === 'IFRAME' && el.classList.contains('rsvp-trigger__frame')) {
+        leadFired = true;
+        metaTrack('Lead', { content_name: 'The Blend Pre-Register' });
+        track('cta_pre_register_clicked', { source: 'sweatpals_iframe' });
+      }
+    });
   }
 })();
 
