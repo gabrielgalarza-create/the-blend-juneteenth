@@ -152,16 +152,16 @@ document.querySelectorAll('.partner, .stat, .aud, .vendor').forEach((el) => {
     }
   }
 
-  // Pre-register CTA clicks (any of the pre-register buttons or links)
-  document.querySelectorAll(
-    '[data-rsvp-open], a[href="#register"], a[href*="overthetopxp.com/sffitfest"]'
-  ).forEach((el) => {
+  // Register CTA clicks: these now link out to the Sweatpals event page.
+  // Fire both the Amplitude event and the Meta "Lead" (registration intent).
+  document.querySelectorAll('[data-register]').forEach((el) => {
     el.addEventListener('click', () => {
       const section = el.closest('section');
       track('cta_pre_register_clicked', {
         location: section ? section.id || 'unknown' : 'nav',
         text: el.textContent.trim()
       });
+      metaTrack('Lead', { content_name: 'The Blend Register' });
     });
   });
 
@@ -182,25 +182,6 @@ document.querySelectorAll('.partner, .stat, .aud, .vendor').forEach((el) => {
   const sponsorEmail = document.querySelector('a[href^="mailto:gabrgalarza"]');
   if (sponsorEmail) {
     sponsorEmail.addEventListener('click', () => track('sponsor_email_clicked'));
-  }
-
-  // Pre-register intent as a Meta "Lead". The actual Pre-Register buttons are
-  // cross-origin Sweatpals iframes, so we can't attach a click handler to them.
-  // Instead we detect a click landing inside one: clicking a cross-origin iframe
-  // blurs the parent window and makes that iframe document.activeElement.
-  // Fired once per page view to avoid double-counting.
-  let leadFired = false;
-  const frames = document.querySelectorAll('.rsvp-trigger__frame');
-  if (frames.length) {
-    window.addEventListener('blur', () => {
-      if (leadFired) return;
-      const el = document.activeElement;
-      if (el && el.tagName === 'IFRAME' && el.classList.contains('rsvp-trigger__frame')) {
-        leadFired = true;
-        metaTrack('Lead', { content_name: 'The Blend Pre-Register' });
-        track('cta_pre_register_clicked', { source: 'sweatpals_iframe' });
-      }
-    });
   }
 })();
 
