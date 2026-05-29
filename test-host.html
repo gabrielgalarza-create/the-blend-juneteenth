@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Test host (simulated Webflow CSS bleed)</title>
+<style>
+/* Simulated worst-case Webflow CSS bleed */
+body { font-family: Arial; margin:0; padding:24px; background:#fafafa; }
+h1,h2 { font-family: 'Times New Roman', serif }
+h3,a { font-family: Georgia, serif }
+a { text-decoration: underline; color: #06c }
+p { margin: 22px 0 }
+.nav { flex-direction: column; background: #f0a }
+.btn { width: 44px; display: block; border-radius: 999px; padding: 9px }
+.container { max-width: 820px }
+.card { background: red; border: 4px solid lime }
+.hero { flex-direction: column }
+.band { background: teal }
+.w-embed { padding: 16px; border: 2px dashed #888; }
+</style>
+</head>
+<body>
+<h1>Host page heading (outside embed - should be Times serif)</h1>
+<h2>Outside .ottff heading - also Times serif</h2>
+<p>Host paragraph outside the embed. Should have margin 22px 0 and Arial body font.</p>
+
+<div class="w-embed">
+<!-- The Blend (Juneteenth) - namespaced NATIVE embed (prefixed classes) -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles-embed.css" />
+<div class="ottff">
+<header class="ff-nav">
+  <a href="#top" class="ff-nav__brand">
+    <img class="ff-brand-mark" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/logos/ott.png" alt="Over The Top" />
+    <span class="ff-brand-divider"></span>
+    <span class="ff-brand-event">THE BLEND</span>
+  </a>
+  <nav class="ff-nav__links">
+    <a href="#vision">Vision</a>
+    <a href="#included">Included</a>
+    <a href="#vip">VIP</a>
+    <a href="#lineup">DJs</a>
+    <a href="#onsite">On-Site</a>
+    <a href="#partners">Partners</a>
+  </nav>
+  <a class="ff-btn ff-btn--small ff-btn--yellow" data-register href="https://sweatpals.com/event/juneteenth-the-blend-coffee-and-rb-day-party" target="_blank" rel="noopener">Register Now</a>
+</header>
+
+<!-- HERO -->
+<section class="ff-hero" id="top">
+  <img class="ff-hero__bg" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/hero.jpg" alt="The Blend Coffee & R&B Day Party crowd at Hella Bees" />
+  <div class="ff-hero__overlay"></div>
+  <div class="ff-hero__content">
+    <div class="ff-hero__eyebrow">
+      <span class="ff-dot"></span> Hella Bees, Oakland &#183; Sat June 20, 2026 &#183; 11AM&ndash;4PM
+    </div>
+    <h1 class="ff-hero__title">
+      <span class="ff-line">THE</span>
+      <span class="ff-line ff-line--yellow">BLEND</span>
+      <span class="ff-line ff-line--small">COFFEE &amp; R&amp;B DAY PARTY</span>
+    </h1>
+    <p style="font-family:var(--display); font-size:13px; letter-spacing:.16em; text-transform:uppercase; color:var(--yellow); margin:0 0 26px;">Presented by Hennessy</p>
+    <div class="ff-hero__ctas">
+      <a class="ff-btn ff-btn--yellow ff-btn--lg" data-register href="https://sweatpals.com/event/juneteenth-the-blend-coffee-and-rb-day-party" target="_blank" rel="noopener">Register Now &#8594;</a>
+      <a class="ff-btn ff-btn--ghost ff-btn--lg" href="#included">See what's included</a>
+    </div>
+    <div class="ff-hero__partners">
+      <span class="ff-hero__partners-label">Good to know</span>
+      <p style="font-size:14px; color:rgba(255,255,255,.82); margin:0; max-width:580px;">
+        21+ event &#183; Juneteenth weekend &#183; Dress code: coffee tones, matcha colors accepted.
+      </p>
+    </div>
+  </div>
+  <div class="ff-hero__scroll">scroll &#8595;</div>
+</section>
+
+<!-- VISION + STATS -->
+<section class="ff-band ff-band--yellow" id="vision">
+  <div class="ff-container">
+    <div class="ff-vision__grid">
+      <div class="ff-vision__copy">
+        <span class="ff-kicker">The vision</span>
+        <h2 class="ff-h2">Coffee, matcha, R&amp;B classics, and you in your coffee tones (matcha tones accepted).</h2>
+        <p>
+          Over The Top is celebrating Juneteenth-weekend with The Blend: Coffee &amp; R&amp;B Day Party, presented by
+          Hennessy. A daytime party built around your R&amp;B classics, your coffee of choice, and maybe an
+          espresso martini.
+        </p>
+        <p>
+          We're bringing 5 Bay Area DJs, a $300 sing-along contest, a caf&#233;, and a crowd dressed in coffee
+          and earth tones (matcha colors accepted).
+        </p>
+      </div>
+      <div class="ff-vision__stats">
+        <div class="ff-stat"><div class="ff-stat__num">$20+</div><div class="ff-stat__label">Early-bird tickets</div></div>
+        <div class="ff-stat"><div class="ff-stat__num">5</div><div class="ff-stat__label">Live R&amp;B DJs</div></div>
+        <div class="ff-stat"><div class="ff-stat__num">5hrs</div><div class="ff-stat__label">Of programming</div></div>
+        <div class="ff-stat"><div class="ff-stat__num">100</div><div class="ff-stat__label">Free coffees & matchas</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1: WHAT'S INCLUDED IN YOUR TICKET (free with entry) -->
+<section class="ff-band" id="included">
+  <div class="ff-container">
+    <span class="ff-kicker">Included with your ticket</span>
+    <h2 class="ff-h2">Included in your experience.</h2>
+    <p class="ff-lede" style="margin:-12px 0 24px; max-width:780px;">
+      The DJs, the sing-along, the photo booth, and your first coffee or matcha (if you're one of the first 100 through the door). All included in your experience.
+    </p>
+
+    <div class="ff-rail" data-rail>
+      <button class="ff-rail__nav ff-rail__nav--prev" type="button" aria-label="Previous">&#8249;</button>
+      <div class="ff-rail__viewport">
+        <div class="ff-rail__track">
+
+          <article class="ff-card ff-card--rail" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/dj-sets.jpg" alt="Live R&B DJ set" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--free">Included in your experience</span>
+                <span class="ff-card__attr">the lineup</span>
+              </div>
+              <h3 class="ff-card__title">Live R&amp;B DJ Sets</h3>
+              <p class="ff-card__sub">11 AM &ndash; 4 PM &#183; 5 Bay Area DJs</p>
+              <div class="ff-card__expand">
+                <p>R&amp;B classics all day from Veyn, Flygerian Jeff, LXXI, Dilly, and Black Woman.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/singalong.jpg" alt="Sing-along contest" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--free">Included in your experience</span>
+                <span class="ff-card__attr">by Over The Top</span>
+              </div>
+              <h3 class="ff-card__title">$300 Sing-Along Contest</h3>
+              <p class="ff-card__sub">2 PM &#183; main floor</p>
+              <div class="ff-card__expand">
+                <p>Grab the mic at 2 PM for OTT's $300 sing-along contest. Your R&amp;B moment, best voice takes the cash.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/cafe.jpg" alt="First coffee or matcha free" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--free">First 100 in</span>
+                <span class="ff-card__attr">by Over The Top</span>
+              </div>
+              <h3 class="ff-card__title">First Coffee or Matcha, Free</h3>
+              <p class="ff-card__sub">Show up early &#183; while supplies last</p>
+              <div class="ff-card__expand">
+                <p>The first 100 attendees through the door get a free coffee or matcha latte, courtesy of OTT.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/full-bar.jpg" alt="Complimentary green tea Henny tastings" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--free">Complimentary tasting &#183; 21+</span>
+                <span class="ff-card__attr">by Hennessy</span>
+              </div>
+              <h3 class="ff-card__title">Green Tea Henny Tastings</h3>
+              <p class="ff-card__sub">All day &#183; 21+ &#183; while supplies last</p>
+              <div class="ff-card__expand">
+                <p>Complimentary green tea Henny pours from Hennessy on the main floor, all afternoon.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/momentus-photo-booth.jpg" alt="moment.us photo booth" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--free">Included in your experience</span>
+                <span class="ff-card__attr">by moment.us</span>
+              </div>
+              <h3 class="ff-card__title">moment.us Photo Booth</h3>
+              <p class="ff-card__sub">All day &#183; keepsake prints</p>
+              <div class="ff-card__expand">
+                <p>A roaming photo booth by moment.us with keepsake prints all afternoon.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+        </div>
+      </div>
+      <button class="ff-rail__nav ff-rail__nav--next" type="button" aria-label="Next">&#8250;</button>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: WHAT'S INCLUDED WITH VIP -->
+<section class="ff-band ff-band--dark" id="vip">
+  <div class="ff-container">
+    <span class="ff-kicker ff-kicker--yellow">VIP / Members</span>
+    <h2 class="ff-h2 ff-h2--light">What's included with VIP access.</h2>
+    <p class="ff-lede" style="color:rgba(255,255,255,.7); margin:-12px 0 24px; max-width:780px;">
+      VIP and member tickets unlock the Hennessy VIP Lounge plus complimentary drinks and dedicated service all afternoon.
+    </p>
+
+    <div class="ff-rail" data-rail>
+      <button class="ff-rail__nav ff-rail__nav--prev" type="button" aria-label="Previous">&#8249;</button>
+      <div class="ff-rail__viewport">
+        <div class="ff-rail__track">
+
+          <article class="ff-card ff-card--rail ff-card--dark" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/vip-lounge.jpg" alt="Hennessy VIP Lounge" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--vip">VIP ticket only</span>
+                <span class="ff-card__attr">by Hennessy</span>
+              </div>
+              <h3 class="ff-card__title">Hennessy VIP Lounge</h3>
+              <p class="ff-card__sub">All day &#183; dedicated lounge area</p>
+              <div class="ff-card__expand">
+                <p>An anchored Hennessy lounge with comfortable seating, dedicated service, and a quieter vibe away from the main floor.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail ff-card--dark" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/vip-espresso.jpg" alt="Complimentary espresso martini tower" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--vip">Complimentary &#183; 21+</span>
+                <span class="ff-card__attr">in the lounge</span>
+              </div>
+              <h3 class="ff-card__title">Complimentary Espresso Martinis</h3>
+              <p class="ff-card__sub">Towers poured all day inside the lounge</p>
+              <div class="ff-card__expand">
+                <p>Espresso martini towers are complimentary inside the VIP lounge. Pour as you go.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail ff-card--dark" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/vip-matcha.jpg" alt="Complimentary coffee and matcha towers" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--vip">Complimentary</span>
+                <span class="ff-card__attr">in the lounge</span>
+              </div>
+              <h3 class="ff-card__title">Complimentary Coffee &amp; Matcha</h3>
+              <p class="ff-card__sub">Caf&#233; lattes on the house in the lounge</p>
+              <div class="ff-card__expand">
+                <p>Coffee and matcha lattes are complimentary in the VIP lounge, no cap on the first 100. Pour all afternoon.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail ff-card--dark" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/vip-hostess.jpg" alt="VIP host" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--vip">VIP ticket only</span>
+                <span class="ff-card__attr">on arrival</span>
+              </div>
+              <h3 class="ff-card__title">VIP Host &amp; Priority Entry</h3>
+              <p class="ff-card__sub">Skip the door line, hosted into the lounge</p>
+              <div class="ff-card__expand">
+                <p>VIP guests skip the door line and are walked directly to the lounge by a dedicated host.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+        </div>
+      </div>
+      <button class="ff-rail__nav ff-rail__nav--next" type="button" aria-label="Next">&#8250;</button>
+    </div>
+  </div>
+</section>
+
+<!-- DJ LINEUP -->
+<section class="ff-band" id="lineup">
+  <div class="ff-container">
+    <span class="ff-kicker">The lineup</span>
+    <h2 class="ff-h2">5 DJs. R&amp;B all afternoon.</h2>
+    <p class="ff-lede" style="margin:-12px 0 24px; max-width:780px;">
+      Five Bay-rooted DJs trading sets from doors to last call, covering all of the diaspora. Classics, deep cuts, and the songs you forgot you knew every word to.
+    </p>
+
+    <div class="ff-rail" data-rail>
+      <button class="ff-rail__nav ff-rail__nav--prev" type="button" aria-label="Previous">&#8249;</button>
+      <div class="ff-rail__viewport">
+        <div class="ff-rail__track">
+
+          <article class="ff-card ff-card--rail ff-card--dj">
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/dj-veyn.jpg" alt="DJ Veyn" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--free">Live R&amp;B set</span>
+                <span class="ff-card__attr">Bay Area DJ</span>
+              </div>
+              <h3 class="ff-card__title">Veyn</h3>
+              <p class="ff-card__sub">R&amp;B classics</p>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail ff-card--dj">
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/dj-flygerian-jeff.jpg" alt="Flygerian Jeff" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--free">Live R&amp;B set</span>
+                <span class="ff-card__attr">Bay Area DJ</span>
+              </div>
+              <h3 class="ff-card__title">Flygerian Jeff</h3>
+              <p class="ff-card__sub">R&amp;B classics</p>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail ff-card--dj">
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/dj-lxxi.jpg" alt="DJ LXXI" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--free">Live R&amp;B set</span>
+                <span class="ff-card__attr">Bay Area DJ</span>
+              </div>
+              <h3 class="ff-card__title">LXXI</h3>
+              <p class="ff-card__sub">R&amp;B classics</p>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail ff-card--dj">
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/dj-dilly.jpg" alt="DJ Dilly" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--free">Live R&amp;B set</span>
+                <span class="ff-card__attr">Bay Area DJ</span>
+              </div>
+              <h3 class="ff-card__title">Dilly</h3>
+              <p class="ff-card__sub">R&amp;B classics</p>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail ff-card--dj">
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/dj-black-woman.jpg" alt="Black Woman" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--free">Live R&amp;B set</span>
+                <span class="ff-card__attr">Bay Area DJ</span>
+              </div>
+              <h3 class="ff-card__title">Black Woman</h3>
+              <p class="ff-card__sub">R&amp;B classics</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+      <button class="ff-rail__nav ff-rail__nav--next" type="button" aria-label="Next">&#8250;</button>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: WHAT'S PROVIDED ON SITE (pay-as-you-go) -->
+<section class="ff-band ff-band--cream" id="onsite">
+  <div class="ff-container">
+    <span class="ff-kicker">Provided on site</span>
+    <h2 class="ff-h2">Caf&#233;, food &amp; bar.</h2>
+    <p class="ff-lede" style="margin:-12px 0 24px; max-width:780px;">
+      Drinks and bites available all afternoon. Cash bar pricing, buy by the glass. 21+ for the bar.
+    </p>
+
+    <div class="ff-rail" data-rail>
+      <button class="ff-rail__nav ff-rail__nav--prev" type="button" aria-label="Previous">&#8249;</button>
+      <div class="ff-rail__viewport">
+        <div class="ff-rail__track">
+
+          <article class="ff-card ff-card--rail" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/coffee-matcha.jpg" alt="The Caf&#233; by The Last Drip" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--cash">Pay as you go</span>
+                <span class="ff-card__attr">by The Last Drip</span>
+              </div>
+              <h3 class="ff-card__title">The Caf&#233;</h3>
+              <p class="ff-card__sub">11 AM &ndash; 4 PM &#183; coffee &amp; matcha lattes</p>
+              <div class="ff-card__expand">
+                <p>Full caf&#233; menu from The Last Drip all afternoon. Pay-as-you-go after the first 100 free drinks are claimed.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/food.jpg" alt="Food for purchase on site" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--cash">Pay as you go</span>
+                <span class="ff-card__attr">on site</span>
+              </div>
+              <h3 class="ff-card__title">Food</h3>
+              <p class="ff-card__sub">All day &#183; for purchase on site</p>
+              <div class="ff-card__expand">
+                <p>Bites and small plates available for purchase all afternoon. Pay-as-you-go.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/slushies.jpg" alt="Frozen summertime slushies" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--cash">Pay as you go &#183; 21+</span>
+                <span class="ff-card__attr">by Hennessy</span>
+              </div>
+              <h3 class="ff-card__title">Summertime Slushies</h3>
+              <p class="ff-card__sub">All day &#183; 21+</p>
+              <div class="ff-card__expand">
+                <p>Frozen summertime slushies by Hennessy, built for an Oakland afternoon. Cash bar.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+          <article class="ff-card ff-card--rail" data-card>
+            <img class="ff-card__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/full-bar.jpg" alt="Full bar pours" />
+            <div class="ff-card__body">
+              <div class="ff-card__access-row">
+                <span class="ff-card__access ff-card__access--cash">Pay as you go &#183; 21+</span>
+                <span class="ff-card__attr">main floor</span>
+              </div>
+              <h3 class="ff-card__title">Full Bar</h3>
+              <p class="ff-card__sub">All day &#183; 21+ &#183; cash bar</p>
+              <div class="ff-card__expand">
+                <p>A full bar on the main floor all afternoon. Beer, wine, cocktails, and spirits. Pay-as-you-go pricing, 21+.</p>
+              </div>
+              <button class="ff-card__toggle" aria-label="Expand">+</button>
+            </div>
+          </article>
+
+        </div>
+      </div>
+      <button class="ff-rail__nav ff-rail__nav--next" type="button" aria-label="Next">&#8250;</button>
+    </div>
+  </div>
+</section>
+
+<!-- RUN OF SHOW (hidden on the public page; still available at run-of-show.html) -->
+<section class="ff-band ff-band--dark" id="schedule" hidden>
+  <div class="ff-container">
+    <span class="ff-kicker ff-kicker--yellow">Run of show</span>
+    <h2 class="ff-h2 ff-h2--light">A day designed to flow.</h2>
+    <p class="ff-lede" style="color:rgba(255,255,255,.7); margin:-12px 0 36px; max-width:780px;">
+      Doors at 11, last pour at 4. Five hours of R&amp;B, coffee, and community at Hella Bees. Times below are a draft and may shift.
+    </p>
+
+    <ol class="ff-schedule">
+      <li><span class="ff-schedule__time">11:00 AM</span><span class="ff-schedule__title">Doors open &#183; Caf&#233; opens</span><span class="ff-schedule__sub">First 100 coffees & matchas free, courtesy of OTT</span></li>
+      <li><span class="ff-schedule__time">11:30 AM</span><span class="ff-schedule__title">R&amp;B DJ sets begin</span><span class="ff-schedule__sub">Classics on the decks all afternoon</span></li>
+      <li><span class="ff-schedule__time">12:00 PM</span><span class="ff-schedule__title">Espresso martini & slushie towers open</span><span class="ff-schedule__sub">21+ &#183; cash bar all day</span></li>
+      <li><span class="ff-schedule__time">12:00 PM</span><span class="ff-schedule__title">VIP Lounge opens</span><span class="ff-schedule__sub">Hennessy VIP lounge &#183; VIP ticket required</span></li>
+      <li><span class="ff-schedule__time">2:00 PM</span><span class="ff-schedule__title">$300 Sing-Along Contest</span><span class="ff-schedule__sub">Grab the mic on the main floor</span></li>
+      <li><span class="ff-schedule__time">2:30 PM</span><span class="ff-schedule__title">Peak set</span><span class="ff-schedule__sub">The afternoon hits its stride</span></li>
+      <li><span class="ff-schedule__time">3:45 PM</span><span class="ff-schedule__title">Last call & closing set</span><span class="ff-schedule__sub">Final pours from the caf&#233; and bar</span></li>
+      <li><span class="ff-schedule__time">4:00 PM</span><span class="ff-schedule__title">Event ends</span><span class="ff-schedule__sub">Thanks for celebrating Juneteenth with us</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- VENUE (hidden on the public page) -->
+<section class="ff-band ff-band--cream" id="venue" hidden>
+  <div class="ff-container">
+    <span class="ff-kicker">Venue &amp; directions</span>
+    <h2 class="ff-h2">Hella Bees, Oakland.</h2>
+    <p class="ff-lede" style="margin:-12px 0 28px; max-width:780px;">
+      2340 Harrison St, Oakland, CA. An airy converted warehouse with wood-truss ceilings, paper lanterns, and bold local art. There is no on-site parking; street parking is available nearby.
+    </p>
+    <div class="ff-venue-cta">
+      <a class="ff-btn ff-btn--black ff-btn--lg" href="https://www.google.com/maps/search/?api=1&query=Hella+Bees+2340+Harrison+St+Oakland+CA" target="_blank" rel="noopener">Get directions</a>
+    </div>
+    <p style="text-align:center; margin:22px 0 0; font-size:14px; color:var(--gray-500); letter-spacing:.04em;">
+      21+ event &nbsp;&#183;&nbsp; All tickets non-refundable &nbsp;&#183;&nbsp; No on-site parking, street parking available
+    </p>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="ff-band ff-band--cream" id="partners">
+  <div class="ff-container">
+    <span class="ff-kicker">Partners</span>
+    <h2 class="ff-h2">Presented by Hennessy.</h2>
+
+    <div class="ff-presenting ff-presenting--logo-only">
+      <div class="ff-presenting__logo">
+        <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/logos/hennessy.jpg" alt="Hennessy" />
+      </div>
+    </div>
+
+    <h3 class="ff-partners-subhead">Vendor brands on-site</h3>
+    <div class="ff-vendor-grid">
+      <article class="ff-vendor">
+        <img class="ff-vendor__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/momentus-photo-booth.jpg" alt="moment.us photo booth" />
+        <div class="ff-vendor__body">
+          <h4 class="ff-vendor__name">moment.us</h4>
+          <p class="ff-vendor__role">Photo booth, keepsake prints all day</p>
+        </div>
+      </article>
+      <article class="ff-vendor">
+        <img class="ff-vendor__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/the-last-drip.jpg" alt="The Last Drip Caf&#233;" />
+        <div class="ff-vendor__body">
+          <h4 class="ff-vendor__name">The Last Drip</h4>
+          <p class="ff-vendor__role">Caf&#233; partner, coffee &amp; matcha service</p>
+        </div>
+      </article>
+      <article class="ff-vendor">
+        <img class="ff-vendor__img" src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/hella-bees.jpg" alt="Hella Bees venue" />
+        <div class="ff-vendor__body">
+          <h4 class="ff-vendor__name">Hella Bees</h4>
+          <p class="ff-vendor__role">Event venue &#183; Oakland</p>
+        </div>
+      </article>
+    </div>
+
+    <p class="ff-partners-cta">
+      Want your brand in this lineup? <a href="mailto:experienceott@gmail.com?subject=The%20Blend%20Coffee%20%26%20R%26B%20Day%20Party%20Partnership">Email us</a>
+      or DM <a href="https://instagram.com/overthetopxp" target="_blank" rel="noopener">@overthetopxp</a> to talk activation.
+    </p>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="ff-band" id="gallery">
+  <div class="ff-container">
+    <span class="ff-kicker">Past editions</span>
+    <h2 class="ff-h2">What it actually looks like.</h2>
+  </div>
+  <div class="ff-gallery">
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-1.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-2.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-3.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-4.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-5.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-6.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-7.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-8.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-9.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-10.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-11.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-12.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-13.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-14.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-15.jpg" alt="" loading="lazy" />
+    <img src="https://gabrielgalarza-create.github.io/the-blend-juneteenth/images/gallery-16.jpg" alt="" loading="lazy" />
+  </div>
+</section>
+
+<!-- REGISTER / CTA -->
+<section class="ff-band ff-band--yellow" id="register">
+  <div class="ff-container ff-container--narrow ff-text-center">
+    <span class="ff-kicker">Get in</span>
+    <h2 class="ff-h2" style="margin-bottom:32px;">Register now and lock your spot.</h2>
+    <div class="ff-cta-row">
+      <a class="ff-btn ff-btn--black ff-btn--lg" data-register href="https://sweatpals.com/event/juneteenth-the-blend-coffee-and-rb-day-party" target="_blank" rel="noopener">Register Now &#8594;</a>
+    </div>
+    <p style="margin:24px 0 0; font-size:14px; color:var(--ink-2);">
+      Questions? DM <a href="https://instagram.com/overthetopxp" target="_blank" rel="noopener" style="font-weight:600; text-decoration:underline;">@overthetopxp</a>
+      or email <a href="mailto:experienceott@gmail.com" style="font-weight:600; text-decoration:underline;">experienceott@gmail.com</a>
+    </p>
+  </div>
+</section>
+
+<script src="script-embed.js"></script>
+</div>
+
+</div>
+
+<h2>Another host heading after the embed - Times serif again</h2>
+</body>
+</html>
