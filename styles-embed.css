@@ -135,6 +135,7 @@
 .ottff .ff-nav .ff-btn { margin-left: auto; }
 @media (min-width: 880px) {.ottff .ff-nav__links { display: flex; }
 .ottff .ff-nav .ff-btn { margin-left: 0; }}
+@media (max-width: 879px) {.ottff .ff-nav { position: static; z-index: auto; }}
 .ottff .ff-btn {
   display: inline-flex;
   align-items: center;
