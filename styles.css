@@ -136,6 +136,11 @@ button { font: inherit; }
   .nav__links { display: flex; }
   .nav .btn { margin-left: 0; }
 }
+/* Mobile: drop sticky + z-index so the parent Webflow hamburger dropdown
+   can render over our nav without a stacking-context fight. */
+@media (max-width: 879px) {
+  .nav { position: static; z-index: auto; }
+}
 
 /* ============ BUTTONS ============ */
 .btn {
